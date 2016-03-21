@@ -1,4 +1,4 @@
-package common;
+package fx.node;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,8 +33,6 @@ public abstract class ObjectField<T> extends TextField {
 		return property.getValue();
 	}
 	
-	public abstract boolean isValid(String string);
-
 	public String getDefaultValue(){
 		return formatter.getValueConverter().toString(getInitValue());
 	}

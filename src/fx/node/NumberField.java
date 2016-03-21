@@ -1,8 +1,7 @@
-package common;
+package fx.node;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 
 import javax.swing.text.NumberFormatter;
@@ -19,8 +18,6 @@ import javafx.util.StringConverter;
  *
  */
 public class NumberField extends ObjectField<Number> {
-
-	private NumberFormat format;
 
 	public NumberField() {
 		this(NumberFormat.getInstance());
@@ -87,19 +84,6 @@ public class NumberField extends ObjectField<Number> {
 			inc = BigDecimal.TEN.pow(digit);
 		BigDecimal res = val.subtract(inc);
 		setProperty(res);
-	}
-
-	@Override
-	public boolean isValid(String string) {
-		Number n1;
-		try {
-			n1 = format.parse(string);
-			String newstring = format.format(n1);
-			if (string.length() != newstring.length())
-				return false;
-		} catch (ParseException e) {
-		}
-		return false;
 	}
 
 	@Override

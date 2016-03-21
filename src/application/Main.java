@@ -4,8 +4,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-import common.Form;
-import common.NumberSpinner;
+import fx.node.Form;
+import fx.node.NumberSpinner;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -18,8 +18,8 @@ public class Main extends Application {
 		DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance();
 		nf.setMinimumIntegerDigits(2);
 		nf.setMinimumFractionDigits(1);
-		nf.setMaximumFractionDigits(2);
-		nf.setMaximumIntegerDigits(3);
+		nf.setMaximumFractionDigits(4);
+		nf.setMaximumIntegerDigits(8);
 		nf.setNegativePrefix(nf.getPositivePrefix()+"-");
 		nf.setNegativeSuffix("");
 		NumberSpinner spinner = new NumberSpinner(nf);

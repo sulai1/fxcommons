@@ -1,4 +1,4 @@
-package common;
+package fx.node;
 
 import java.util.LinkedList;
 import java.util.List;
