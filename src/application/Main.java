@@ -1,11 +1,11 @@
 package application;
 
-import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
 import common.Form;
-import common.attributes.NumberAttribute;
+import common.NumberSpinner;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -15,17 +15,18 @@ public class Main extends Application {
 		Form form = new Form();
 		form.getDialogPane().getScene().getStylesheets().add("application/application.css");
 
-		NumberAttribute na = new NumberAttribute();
-		NumberFormat nf = NumberFormat.getCurrencyInstance();
+		DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance();
+		nf.setMinimumIntegerDigits(2);
+		nf.setMinimumFractionDigits(1);
 		nf.setMaximumFractionDigits(2);
-		nf.setMinimumFractionDigits(2);
 		nf.setMaximumIntegerDigits(3);
-		nf.setMinimumIntegerDigits(3);
-		na.setNumberFormat(nf);
-		na.setName("a");
-		na.setNumber(BigDecimal.ZERO);
-		na.initVisualRepresentation();
-		form.getDialogPane().setContent(na.getBounds());
+		nf.setNegativePrefix(nf.getPositivePrefix()+"-");
+		nf.setNegativeSuffix("");
+		NumberSpinner spinner = new NumberSpinner(nf);
+		spinner.setOnPropertyChange((o , old, newVal)->{
+			System.out.println(newVal);
+			});
+		form.getDialogPane().setContent(spinner);
 		form.showAndWait();
 	}
 

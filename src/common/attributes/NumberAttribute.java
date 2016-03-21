@@ -2,64 +2,29 @@ package common.attributes;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.function.UnaryOperator;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 
 public class NumberAttribute extends FormAttribute<BigDecimal> {
 
-	private BigDecimal number;
 	private TextField tf = new TextField();
-	private NumberFormat nf = NumberFormat.getInstance();
+	private ObjectProperty<BigDecimal> value;
+	private NumberFormat format = NumberFormat.getInstance();
 
 	public NumberAttribute() {
-		tf.setTextFormatter(new TextFormatter<BigDecimal>(new UnaryOperator<Change>() {
-			
+		value.addListener(new ChangeListener<BigDecimal>() {
 			@Override
-			public Change apply(Change c) {
-				try {
-					if (c.isAdded()){
-						int pos = c.getCaretPosition();
-						String text = c.getControlNewText();
-						if(!c.getControlText().isEmpty())
-							text = text.substring(0, pos)+text.substring(pos+1);
-						c.setText(text);
-					}else if (c.isReplaced()) 
-						c.setText(c.getControlNewText());
-					else if(c.isDeleted())
-						return null;
-					else
-						return c;
+			public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue,
+					BigDecimal newValue) {
 
-					Number parse = nf.parse(c.getText());
-					if (parse == null)
-						return null;
-					number = new BigDecimal(parse.toString());
-					
-				} catch (ParseException e) {
-					return null;
-				}
-				return c;
+				String string = format.format(newValue.toString());
+				tf.setText(string);
 			}
-		}));
-
-	}
-
-	public BigDecimal getNumber() {
-		return number;
-	}
-
-	public void setNumber(BigDecimal number) {
-		tf.setText(nf.format(number));
-		this.number = number;
-	}
-
-	public void setNumberFormat(NumberFormat nf) {
-		this.nf = nf;
+		});
 	}
 
 	@Override
@@ -73,13 +38,12 @@ public class NumberAttribute extends FormAttribute<BigDecimal> {
 	}
 
 	@Override
-	protected BigDecimal getControllValue() {
-		return number;
+	public BigDecimal getControllValue() {
+		return this.value.get();
 	}
 
 	@Override
-	protected void setControllValue(BigDecimal value) {
-		tf.setText(value.toString());
+	public void setControllValue(BigDecimal value) {
+		this.value.set(value);
 	}
-
 }

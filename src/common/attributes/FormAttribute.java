@@ -71,7 +71,7 @@ public abstract class FormAttribute<T> {
 	
 	public abstract boolean isValid(T value);
 
-	protected abstract T getControllValue();
+	public abstract T getControllValue();
 	
-	protected abstract void setControllValue(T value);
+	public abstract void setControllValue(T value);
 }
