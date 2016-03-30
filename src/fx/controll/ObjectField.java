@@ -1,12 +1,15 @@
-package fx.node;
+package fx.controll;
 
+import fx.property.ValueSupplier;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.util.StringConverter;
 
-public abstract class ObjectField<T> extends TextField {
+public abstract class ObjectField<T> extends TextField implements ValueSupplier<T>{
 
 	private ObjectProperty<T> property = new SimpleObjectProperty<T>();
 	private TextFormatter<T> formatter;
@@ -17,8 +20,11 @@ public abstract class ObjectField<T> extends TextField {
 		setTextFormatter(formatter);
 		property.set(getInitValue());
 		textProperty().addListener((o, oldVal, newVal) -> {
-			if(newVal!=null)
-				property.setValue(formatter.getValueConverter().fromString(getText()));
+			if(newVal!=null) {
+				StringConverter<T> c = formatter.getValueConverter();
+				T v = c.fromString(getText());
+				property.setValue(v);
+			}
 		
 		});
 	}
@@ -29,8 +35,12 @@ public abstract class ObjectField<T> extends TextField {
 		textProperty().setValue(formatter.getValueConverter().toString(val));
 	}
 
-	public T getProperty() {
-		return property.getValue();
+	@Override
+	public Node getGraphic() {
+		return this;
+	}
+	public ObjectProperty<T> getProperty() {
+		return property;
 	}
 	
 	public String getDefaultValue(){

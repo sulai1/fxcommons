@@ -1,13 +1,12 @@
-package fx.node;
+package fx.controll;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.text.ParsePosition;
 
 import javax.swing.text.NumberFormatter;
 
 import javafx.scene.control.TextFormatter;
-import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * A simple text field that allows only numbers as input. It uses a
@@ -24,26 +23,7 @@ public class NumberField extends ObjectField<Number> {
 	}
 
 	public NumberField(NumberFormat format) {
-		super(new TextFormatter<Number>(new StringConverter<Number>() {
-
-			@Override
-			public Number fromString(String string) {
-				ParsePosition pos = new ParsePosition(0);
-				Number number = format.parse(string, pos);
-				if (pos.getErrorIndex()!=-1)
-					return null;
-				return number;
-			}
-
-			@Override
-			public String toString(Number object) {
-				try {
-					return format.format(object);
-				} catch (IllegalArgumentException e) {
-					return format.format(0);
-				}
-			}
-		}));
+		super(new TextFormatter<Number>(new NumberStringConverter(format)));
 	}
 
 	public void increment() {
@@ -57,12 +37,9 @@ public class NumberField extends ObjectField<Number> {
 	}
 
 	public void increment(int digit) {
-		if (digit == 0) {
-			increment();
-			return;
-		}
-		BigDecimal val = new BigDecimal(getProperty().toString());
+		BigDecimal val = new BigDecimal(getProperty().get().toString());
 		BigDecimal inc;
+		inc = BigDecimal.ONE;
 		if (digit < 0)
 			inc = BigDecimal.ONE.divide(BigDecimal.TEN.pow(Math.abs(digit)));
 		else
@@ -72,12 +49,10 @@ public class NumberField extends ObjectField<Number> {
 	}
 
 	public void decrement(int digit) {
-		if (digit == 0) {
-			decrement();
-			return;
-		}
-		BigDecimal val = new BigDecimal(getProperty().toString());
+		BigDecimal val = new BigDecimal(getProperty().get().toString());
 		BigDecimal inc;
+		if (digit == 0)
+			inc = BigDecimal.ONE;
 		if (digit < 0)
 			inc = BigDecimal.ONE.divide(BigDecimal.TEN.pow(Math.abs(digit)));
 		else
@@ -90,5 +65,4 @@ public class NumberField extends ObjectField<Number> {
 	public Number getInitValue() {
 		return 0;
 	}
-
 }
