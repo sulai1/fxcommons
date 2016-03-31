@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -104,5 +105,8 @@ public class NumberChooser extends VBox implements ValueSupplier<Number>{
 	}
 	public void setNumber(Number n) {
 		numberField.setProperty(n);
+	}
+	public NumberField getTextField() {
+		return numberField;
 	}
 }

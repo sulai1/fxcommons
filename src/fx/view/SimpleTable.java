@@ -29,7 +29,6 @@ public class SimpleTable<T> extends TableView<T> {
 		names.add(string);
 		int index = getColumns().size();
 		TableColumn<T, String> column = new TableColumn<>(string);
-		column.setPrefWidth(100);
 
 		column.setCellValueFactory(createStringValueFactory(string, index, cb));
 		getColumns().add(column);

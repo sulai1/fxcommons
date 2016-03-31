@@ -1,6 +1,7 @@
 package fx.controll;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fx.property.ValueSupplier;
 import javafx.beans.property.ObjectProperty;
@@ -26,9 +27,10 @@ import javafx.util.Callback;
  */
 public class Form<T> extends Dialog<T> implements ValueSupplier<T> {
 
+	private List<Boolean> mandatory = new ArrayList<>();
 	private ListView<Field<?>> view;
 	private Node submit;
-	private ArrayList<ValueSupplier<?>> values = new ArrayList<>();
+	private List<ValueSupplier<?>> values = new ArrayList<>();
 
 	public Form() {
 		// Enable/Disable submit button depending on whether a username was
@@ -44,12 +46,20 @@ public class Form<T> extends Dialog<T> implements ValueSupplier<T> {
 		getDialogPane().setContent(view);
 	}
 
-	public <V> void addField(String name, ValueSupplier<V> val) {
+	public <V> void addField(String name, ValueSupplier<V> val, boolean bMandatory) {
+		if (bMandatory) {
+			int index = mandatory.size();
+			mandatory.add(false);
+			val.getProperty().addListener(l -> {
+				mandatory.set(index, true);
+				checkValid();
+			});
+		}
 		this.values.add(val);
 		view.getItems().add(new Field<>(name, val));
 	}
 
-	public <V> void addField(String name, Node n, ObjectProperty<V> property) {
+	public <V> void addField(String name, Node n, ObjectProperty<V> property, boolean bMandatory) {
 		ValueSupplier<V> val = new ValueSupplier<V>() {
 
 			@Override
@@ -62,9 +72,16 @@ public class Form<T> extends Dialog<T> implements ValueSupplier<T> {
 				return n;
 			}
 		};
-		addField(name, val);
+		addField(name, val, bMandatory);
 	}
 
+	public <V> void addField(String name, ValueSupplier<V> val) {
+		addField(name, val, false);
+	}
+
+	public <V> void addField(String name, Node n, ObjectProperty<V> property) {
+		addField(name, n, property, false);
+	}
 	/**
 	 * Disables the submit button until all the properties are set at least once
 	 * 
@@ -103,7 +120,7 @@ public class Form<T> extends Dialog<T> implements ValueSupplier<T> {
 			this(name, val.getGraphic(), val.getProperty());
 		}
 
-		public Field(String name,Callback<String, String> cb) {
+		public Field(String name, Callback<String, String> cb) {
 			Node label = new Label(name);
 			getChildren().add(label);
 			TextField tf = new TextField();
@@ -130,6 +147,14 @@ public class Form<T> extends Dialog<T> implements ValueSupplier<T> {
 		private void setValid(boolean bValid) {
 			this.bValid = bValid;
 		}
+	}
+
+	private void checkValid() {
+		for (Boolean b : mandatory) {
+			if (!b)
+				return;
+		}
+		disableSubmit(false);
 	}
 
 	@Override
