@@ -30,9 +30,9 @@ public class CSVReader {
 		try {
 			// read all rows
 			String line = in.readLine();
-			if (in.ready()){
+			if (line!=null){
 				int columns = getColumns(line);
-				do {
+				while (line!=null) {
 					ArrayList<Integer> indices = getSeperators(line);
 					String[] elements = new String[columns];
 					int start = 0;
@@ -43,11 +43,15 @@ public class CSVReader {
 						elements[i] = line.substring(start, end);
 						start = end+1;
 					}
-					elements[i] = line.substring(start);
+					if(start!=line.length())
+						elements[i] = line.substring(start);
 					//add Elements to table and read new line
 					table.add(elements);
-					line = in.readLine();
-				} while (in.ready());
+					if(in.ready())
+						line = in.readLine();
+					else
+						line = null;
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

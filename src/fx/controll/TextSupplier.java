@@ -2,7 +2,6 @@ package fx.controll;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -63,6 +62,10 @@ public class TextSupplier implements ValueSupplier<String> {
 	@Override
 	public Node getGraphic() {
 		return b;
+	}
+	
+	protected TextField getTextField() {
+		return textField;
 	}
 
 }

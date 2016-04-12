@@ -21,7 +21,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class TestApp extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws ParseException, IOException {

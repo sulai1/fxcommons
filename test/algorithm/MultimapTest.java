@@ -23,17 +23,17 @@ public class MultimapTest {
 		int key = (int)'s';
 		
 		//check data
-		assertEquals(3,map.get(key).getValues().size());
+		assertEquals(3,map.getByKey(key).getValues().size());
 		assertEquals(6,map.size());
 		assertEquals(true,map.contains("sa"));
 		
 		//test remove by value
 		String val = "sa";
-		SetNode<Integer, String> remove = map.remove(val);
+		SetNode<Integer, String> remove = map.removeByVal(val);
 		assertEquals(2,remove.getValues().size());
 		assertEquals(5,map.size());
 		assertEquals(false,map.contains(val));
-		assertEquals(null,map.remove(val));
+		assertEquals(false,map.remove(val));
 		
 		//test remove by key
 		assertEquals(true, map.removeKey(key)!=null);
