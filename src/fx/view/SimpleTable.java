@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import io.CSVReader;
@@ -39,6 +40,17 @@ public class SimpleTable<T> extends TableView<T> {
 		cbs.add(cb);
 		int index = getColumns().size();
 		TableColumn<T, String> column = new TableColumn<>(string);
+
+		column.setCellValueFactory(createStringValueFactory(string, index, cb));
+		getColumns().add(column);
+	}
+	
+	public void addColumn(String string, Callback<T, String> cb, Comparator<String> comp) {
+		names.add(string);
+		cbs.add(cb);
+		int index = getColumns().size();
+		TableColumn<T, String> column = new TableColumn<>(string);
+		column.setComparator(comp);
 
 		column.setCellValueFactory(createStringValueFactory(string, index, cb));
 		getColumns().add(column);
